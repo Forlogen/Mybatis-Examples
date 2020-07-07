@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.AccountDao">
+    <select id="findAll" resultType="domain.Account">
+        select * from account
+    </select>
+    <insert id="saveUser" parameterType="domain.Account">
+        <selectKey keyProperty="id" keyColumn="id" resultType="int" order="AFTER">
+            select last_insert_id();
+        </selectKey>
+        insert into account(id, username, password) values(#{id}, #{username}, #{password})
+    </insert>
+    <update id="updateUser" parameterType="domain.Account">
+        update account set username=#{username}, password=#{password} where id=#{id}
+    </update>
+    <delete id="deleteUser" parameterType="Integer">
+        delete from account where id=#{id}
+    </delete>
+    <select id="getUserById" parameterType="int" resultType="domain.Account">
+        select * from account where id=#{id}
+    </select>
+    <select id="getUserByName" parameterType="String" resultType="domain.Account">
+        select * from account where username like #{name}
+    </select>
+    <select id="getCount" parameterType="int" resultType="java.lang.Integer">
+        select count(id) from account;
+    </select>
+    <select id="getUserByVo" parameterType="domain.QueryVo" resultType="domain.Account">
+        select * from account where username like #{user.username}
+    </select>
+</mapper>

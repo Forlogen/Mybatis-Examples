@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.AccountDao">
+    <sql id="defaultUser">
+        select * from account
+    </sql>
+    <select id="findAll" resultType="domain.Account">
+        <include refid="defaultUser"></include>
+    </select>
+    <select id="getUserById" parameterType="int" resultType="domain.Account">
+        select * from account where id=#{id}
+    </select>
+    <select id="getUserByName" parameterType="String" resultType="domain.Account">
+        select * from account where username like #{name}
+    </select>
+    <select id="getUserByVo" parameterType="domain.QueryVo" resultType="domain.Account">
+        select * from account where username like #{user.username}
+    </select>
+    <!--
+    <select id="findByUser" resultType="domain.Account" parameterType="domain.Account">
+        select * from account where 1=1
+        <if test="username!=null and username!=''">
+            and username like #{username}
+        </if>
+    </select>
+    -->
+    <select id="findByUser" resultType="domain.Account" parameterType="domain.Account">
+        select * from account
+        <where>
+            <if test="username!=null and username!=''">
+                and username like #{username}
+            </if>
+        </where>
+    </select>
+    <!--
+    <select id="findByIds" resultType="domain.Account" parameterType="domain.QueryVo">
+        select * from account where id in (1,2,3);
+    </select>
+    -->
+    <select id="findByIds" resultType="domain.Account" parameterType="domain.QueryVo">
+        select * from account
+        <where>
+            <if test="ids!=null and ids.size()>0">
+                <foreach collection="ids" open="id in (" close=")" item="id" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>
